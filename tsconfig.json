@@ -5,7 +5,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
-    "jsx": "react-native",
+    "jsx": "preserve",
     "lib": [
       "esnext",
       "dom"

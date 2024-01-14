@@ -17,7 +17,7 @@ import { getNameAndIndexKey } from '../utils';
 
 type FormProps<TFieldValues extends FieldValues = FieldValues> =
   UseFormProps<TFieldValues> &
-    ComponentProps<'form'> & {
+    Omit<ComponentProps<'form'>, 'onSubmit'> & {
       children: ReactNode;
       formId?: string;
       dependencies?: FormDependencies<TFieldValues>;
