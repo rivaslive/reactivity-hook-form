@@ -1,0 +1,56 @@
+{
+  "name": "reactivity-hook-form",
+  "version": "1.0.1",
+  "keywords": [
+    "react-hook-form",
+    "form",
+    "react",
+    "reactivity",
+    "react-form",
+    "reactivity-hook-form",
+    "reactivity-f",
+    "rc-fields-form",
+    "rc-field-form",
+    "rc-form",
+    "reactivity-form"
+  ],
+  "description": "Reactivity Hook Form is an innovative wrapper designed to work with React Hook Form, a popular library for managing forms in React. This wrapper focuses on simplifying and automating the process of form integration, providing an elegant and efficient solution for developers.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "source": "src/index.ts",
+  "prepublish": "tsc --composite false",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --composite false",
+    "prepublishOnly": "yarn build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "author": "rivaslive",
+  "bugs": {
+    "url": "https://github.com/rivaslive/reactivity-hook-form/issues"
+  },
+  "homepage": "https://github.com/rivaslive/reactivity-hook-form",
+  "dependencies": {
+    "react-hook-form": "^7.49.3"
+  },
+  "peerDependencies": {
+    "react": ">=16"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.47",
+    "prettier": "^3.2.1",
+    "react": "^18.2.0",
+    "typescript": "^5.3.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rivaslive/reactivity-hook-form.git"
+  }
+}
