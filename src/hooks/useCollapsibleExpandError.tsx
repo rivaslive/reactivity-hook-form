@@ -9,7 +9,7 @@ type HookOutput = {
   handleExpand: (_e: SyntheticEvent, expanded: boolean) => void;
 };
 
-function findErrorInFormState<TFieldValues>(
+function findErrorInFormState<TFieldValues extends FieldValues = FieldValues>(
   object: FieldErrors<TFieldValues>,
   name: string
 ) {
@@ -17,7 +17,7 @@ function findErrorInFormState<TFieldValues>(
   const nameInArray = name.split('.');
 
   // Recursive helper function to search for the property
-  function recursiveSearch(obj: object, parts: string[]) {
+  function recursiveSearch(obj: any, parts: string[]): any {
     // Check if the current object has the property
     if (!obj.hasOwnProperty(parts[0])) return;
     // If there are more parts in the name, continue the recursive search

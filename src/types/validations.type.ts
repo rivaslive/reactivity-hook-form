@@ -1,6 +1,26 @@
-import { FieldValues } from 'react-hook-form';
-import { Rules } from './dependencies.type';
-import { FieldPathInternal, ArrayKey } from './extend-react-hook-form.type';
+import { FieldValues, RegisterOptions } from 'react-hook-form';
+import { FieldPath, FieldPathValue } from 'react-hook-form/dist/types/path';
+
+import {
+  FieldPathInternal,
+  ArrayKey,
+  InternalValidate,
+} from './extend-react-hook-form.type';
+
+export type Rules<
+  TFieldValues extends FieldValues = FieldValues,
+  TFieldName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> = Omit<
+  RegisterOptions<TFieldValues>,
+  'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled' | 'validate'
+> & {
+  validate?:
+    | InternalValidate<FieldPathValue<TFieldValues, TFieldName>, TFieldValues>
+    | Record<
+    string,
+    InternalValidate<FieldPathValue<TFieldValues, TFieldName>, TFieldValues>
+  >;
+};
 
 export type FormValidations<TFieldValues extends FieldValues = FieldValues> = {
   [key in FieldPathInternal<TFieldValues, ArrayKey>]?: Rules<TFieldValues>;

@@ -1,20 +1,10 @@
-import {
-  DeepPartial,
-  FieldValues,
-  RegisterOptions,
-  UseFormReturn,
-} from 'react-hook-form';
+import { FieldValues, UseFormReturn } from 'react-hook-form';
 import { FieldPathInternal, ArrayKey } from './extend-react-hook-form.type';
 
-export type Rules<TFieldValues extends FieldValues = FieldValues> = Omit<
-  RegisterOptions<TFieldValues>,
-  'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
->;
-
-export type DependencyAction<TFieldValues> = (
-  formValues: DeepPartial<TFieldValues> | TFieldValues,
+export type DependencyAction<TFieldValues extends FieldValues = FieldValues> = (
+  formValues: Partial<TFieldValues>,
   methods: UseFormReturn<TFieldValues>,
-  options: { index: null | number }
+  options: { index: null | number; name: string | null }
 ) => void;
 
 export type FormDependencies<TFieldValues extends FieldValues = FieldValues> = {

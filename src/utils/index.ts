@@ -2,16 +2,17 @@ import { ControllerRenderProps } from 'react-hook-form/dist/types/controller';
 import { FieldProps, RenderFieldProps } from '../components/FormItem';
 import { ArrayKey } from '../types/extend-react-hook-form.type';
 import { isValidElement } from 'react';
+import { FieldValues } from 'react-hook-form/dist/types';
 
 export const arrayKey: ArrayKey = '[number]';
 
-export function hasRenderFunction<TFieldValues>(
-  props: FieldProps<TFieldValues>
-): props is RenderFieldProps<TFieldValues> {
-  return Boolean(isValidElement(props.children));
+export function hasRenderFunction<
+  TFieldValues extends FieldValues = FieldValues
+>(props: FieldProps<TFieldValues>): props is RenderFieldProps<TFieldValues> {
+  return !isValidElement(props?.children);
 }
 
-export function cleanInputProps<TFieldValues>(
+export function cleanInputProps<TFieldValues extends FieldValues = FieldValues>(
   fieldProps: ControllerRenderProps<TFieldValues>
 ) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -4,6 +4,7 @@ import {
   IsEqual,
   Primitive,
 } from 'react-hook-form/dist/types/utils';
+import { ValidateResult } from 'react-hook-form/dist/types/validator';
 
 export type ArrayKey = '[number]';
 
@@ -21,8 +22,8 @@ type PathImpl<
 > = V extends Primitive | BrowserNativeObject
   ? `${K}`
   : true extends AnyIsEqual<TraversedTypes, V>
-  ? `${K}`
-  : `${K}` | `${K}.${FieldPathInternal<V, ArrayK, TraversedTypes | V>}`;
+    ? `${K}`
+    : `${K}` | `${K}.${FieldPathInternal<V, ArrayK, TraversedTypes | V>}`;
 
 export type FieldPathInternal<
   T,
@@ -31,14 +32,23 @@ export type FieldPathInternal<
 > = T extends ReadonlyArray<infer V>
   ? IsTuple<T> extends true
     ? {
-        [K in TupleKeys<T>]-?: PathImpl<
-          K & string,
-          T[K],
-          TraversedTypes,
-          ArrayK
-        >;
-      }[TupleKeys<T>]
+      [K in TupleKeys<T>]-?: PathImpl<
+        K & string,
+        T[K],
+        TraversedTypes,
+        ArrayK
+      >;
+    }[TupleKeys<T>]
     : PathImpl<ArrayK, V, TraversedTypes, ArrayK>
   : {
-      [K in keyof T]-?: PathImpl<K & string, T[K], TraversedTypes, ArrayK>;
-    }[keyof T];
+    [K in keyof T]-?: PathImpl<K & string, T[K], TraversedTypes, ArrayK>;
+  }[keyof T];
+
+export type InternalValidate<TFieldValue, TFormValues> = (
+  value: TFieldValue,
+  formValues: TFormValues,
+  options: {
+    index: number | null;
+    name: string | null;
+  }
+) => ValidateResult | Promise<ValidateResult>;

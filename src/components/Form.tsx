@@ -1,10 +1,12 @@
+import * as React from 'react';
 import { ComponentProps, ReactNode, useEffect, useState } from 'react';
 import {
   FieldValues,
   FormProvider,
   SubmitHandler,
   UseFormProps,
-  useForm
+  useForm,
+  UseFormReturn
 } from 'react-hook-form';
 import { ValidationsProvider } from '../context/ValidationsContext';
 import { FormDependencies } from '../types/dependencies.type';
@@ -14,15 +16,19 @@ import {
 } from '../types/extend-react-hook-form.type';
 import { FormValidations } from '../types/validations.type';
 import { getNameAndIndexKey } from '../utils';
+import { FormOptions, FormOptionsProvider } from '../context/FormOptions';
 
 type FormProps<TFieldValues extends FieldValues = FieldValues> =
   UseFormProps<TFieldValues> &
+    Partial<FormOptions> &
     Omit<ComponentProps<'form'>, 'onSubmit'> & {
       children: ReactNode;
       formId?: string;
+      gap?: number;
       dependencies?: FormDependencies<TFieldValues>;
       validations?: FormValidations<TFieldValues>;
       onSubmit?: SubmitHandler<TFieldValues>;
+      formContext?: UseFormReturn<TFieldValues>;
     };
 
 const Form = <TFieldValues extends FieldValues = FieldValues>(
@@ -34,23 +40,30 @@ const Form = <TFieldValues extends FieldValues = FieldValues>(
     dependencies,
     validations,
     onSubmit,
+    formContext,
+    defaultValues,
+    gap = 16,
+    showErrorText = true,
     ...restFormProps
   } = props;
 
   // using a state here to make the "scroll & focus" happen once per submission
   const [canFocus, setCanFocus] = useState(true);
 
-  const methods = useForm<TFieldValues>({
-    mode: 'onChange',
-    ...restFormProps
-  });
+  const methods =
+    formContext ??
+    useForm<TFieldValues>({
+      mode: 'onChange',
+      defaultValues,
+      ...restFormProps
+    });
 
   // this useEffect is to enable the watcher and launch the action of the dependencies
   useEffect(() => {
     if (dependencies?.length) {
       const subscription = methods.watch(
         (formValues, { name: _name, type }) => {
-          if (type === 'change') {
+          if (type === 'change' && _name) {
             const { name, index } = getNameAndIndexKey(_name);
             const findDependencies = dependencies.filter((dep) => {
               return dep.dependencies.includes(
@@ -98,15 +111,23 @@ const Form = <TFieldValues extends FieldValues = FieldValues>(
 
   return (
     <FormProvider {...methods}>
-      <ValidationsProvider validations={validations}>
-        <form
-          id={formId}
-          onSubmit={methods.handleSubmit(onSubmit)}
-          {...restFormProps}
-        >
-          {children}
-        </form>
-      </ValidationsProvider>
+      <FormOptionsProvider showErrorText={showErrorText}>
+        <ValidationsProvider validations={validations}>
+          <form
+            id={formId}
+            onSubmit={methods.handleSubmit(onSubmit ?? (() => {}))}
+            {...restFormProps}
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap,
+              ...restFormProps?.style
+            }}
+          >
+            {children}
+          </form>
+        </ValidationsProvider>
+      </FormOptionsProvider>
     </FormProvider>
   );
 };
