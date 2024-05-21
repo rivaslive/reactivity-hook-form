@@ -1,6 +1,7 @@
 import './App.css';
 import '../../../../reactivity-hook-form/src/style.css';
 import Form, { FormItem } from '../../../../reactivity-hook-form/src';
+import { FieldPathLib } from '../../../src/types/extend-react-hook-form.type.ts';
 
 type FormType = {
   user: {
@@ -8,6 +9,10 @@ type FormType = {
     password: string;
   };
 };
+
+// test for preventing typos
+const key: FieldPathLib<FormType> = 'user.username';
+console.log(key);
 
 function App() {
   return (

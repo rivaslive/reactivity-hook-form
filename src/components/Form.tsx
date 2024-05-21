@@ -10,7 +10,7 @@ import {
 } from 'react-hook-form';
 import { ValidationsProvider } from '../context/ValidationsContext';
 import { FormDependencies } from '../types/dependencies.type';
-import { FieldPathInternal } from '../types/extend-react-hook-form.type';
+import { FieldPathLib } from '../types/extend-react-hook-form.type';
 import { FormValidations } from '../types/validations.type';
 import { getNameAndIndexKey } from '../utils';
 import { FormOptions, FormOptionsProvider } from '../context/FormOptions';
@@ -64,7 +64,7 @@ const Form = <TFieldValues extends FieldValues = FieldValues>(
             const { name, index } = getNameAndIndexKey(_name);
             const findDependencies = dependencies.filter((dep) => {
               return dep.dependencies.includes(
-                name as FieldPathInternal<TFieldValues>
+                name as FieldPathLib<TFieldValues>
               );
             });
 

@@ -7,8 +7,7 @@ import {
 } from 'react';
 import { FieldPath, FieldPathValue } from 'react-hook-form/dist/types/path';
 
-import { InternalValidate } from '../types/extend-react-hook-form.type';
-import { FormValidations } from '../types/validations.type';
+import { FormValidations, InternalValidate } from '../types/validations.type';
 import { getNameAndIndexKey } from '../utils';
 import { FieldValues } from 'react-hook-form';
 
