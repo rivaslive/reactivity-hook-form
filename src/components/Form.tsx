@@ -72,7 +72,7 @@ const Form = <TFieldValues extends FieldValues = FieldValues>(
             });
 
             findDependencies.forEach((dependency) =>
-              dependency.callback?.(formValues, methods, { index })
+              dependency.callback?.(formValues, methods, { index, name })
             );
           }
         }

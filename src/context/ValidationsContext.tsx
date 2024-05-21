@@ -1,25 +1,25 @@
-import * as React from 'react';
+import React from 'react';
 import {
   PropsWithChildren,
   createContext,
   useContext,
   useCallback
 } from 'react';
-import { FieldValues } from 'react-hook-form';
+import { FieldPath, FieldPathValue } from 'react-hook-form/dist/types/path';
+
+import { InternalValidate } from '../types/extend-react-hook-form.type';
 import { FormValidations } from '../types/validations.type';
 import { getNameAndIndexKey } from '../utils';
-import {
-  ArrayKey,
-  FieldPathInternal
-} from '../types/extend-react-hook-form.type';
-import { Rules } from '../types/dependencies.type';
+import { FieldValues } from 'react-hook-form';
 
 type ValidationsContextProps<TFieldValues extends FieldValues = FieldValues> = {
   validations: FormValidations<TFieldValues>;
-  getValidation: (name: string) => undefined | Rules<TFieldValues>;
+  getValidation: (name: unknown) => undefined | FormValidations<any>;
 };
 
-const ValidationsContext = createContext<any>(null);
+const ValidationsContext = createContext<ValidationsContextProps<any> | null>(
+  null
+);
 
 export function ValidationsProvider<
   TFieldValues extends FieldValues = FieldValues
@@ -29,12 +29,47 @@ export function ValidationsProvider<
 }: PropsWithChildren<
   Partial<Pick<ValidationsContextProps<TFieldValues>, 'validations'>>
 >) {
-  const getValidation = useCallback<
-    ValidationsContextProps<TFieldValues>['getValidation']
-  >(
+  const getValidation = useCallback(
     (_name: string) => {
-      const { name } = getNameAndIndexKey(_name);
-      return validations?.[name as FieldPathInternal<TFieldValues, ArrayKey>];
+      const { name, index } = getNameAndIndexKey(_name);
+      const rule = validations?.[name];
+      if (!rule) return {};
+      let validation = {};
+
+      if (typeof rule?.validate === 'function') {
+        validation = {
+          validate(value, formValues) {
+            return rule.validate(value, formValues, { index, name });
+          }
+        };
+      } else if (typeof rule?.validate === 'object') {
+        const validationRule = rule.validate as Record<
+          string,
+          InternalValidate<
+            FieldPathValue<TFieldValues, FieldPath<TFieldValues>>,
+            TFieldValues
+          >
+        >;
+
+        validation = {
+          validate: Object.keys(validationRule).reduce((acc, currentKey) => {
+            return {
+              ...acc,
+              [currentKey]: (value, formValues) => {
+                return validationRule[currentKey](value, formValues, {
+                  index,
+                  name
+                });
+              }
+            };
+          }, {})
+        };
+      }
+
+      return {
+        ...rule,
+        ...validation
+      };
     },
     [validations]
   );
@@ -49,12 +84,13 @@ export function ValidationsProvider<
 export function useValidations<
   TFieldValues extends FieldValues = FieldValues
 >() {
-  const context =
-    useContext<ValidationsContextProps<TFieldValues>>(ValidationsContext);
+  const context = useContext<ValidationsContextProps<TFieldValues> | null>(
+    ValidationsContext
+  );
 
   if (!context) {
-    console.error('useValidations must be used within a ValidationsProvider');
+    console.error('Validation provider error');
   }
 
-  return context;
+  return context as ValidationsContextProps<TFieldValues>;
 }

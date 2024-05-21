@@ -3,8 +3,7 @@ import { FieldPath, FieldPathValue } from 'react-hook-form/dist/types/path';
 
 import {
   FieldPathInternal,
-  ArrayKey,
-  InternalValidate,
+  InternalValidate
 } from './extend-react-hook-form.type';
 
 export type Rules<
@@ -17,11 +16,11 @@ export type Rules<
   validate?:
     | InternalValidate<FieldPathValue<TFieldValues, TFieldName>, TFieldValues>
     | Record<
-    string,
-    InternalValidate<FieldPathValue<TFieldValues, TFieldName>, TFieldValues>
-  >;
+        string,
+        InternalValidate<FieldPathValue<TFieldValues, TFieldName>, TFieldValues>
+      >;
 };
 
 export type FormValidations<TFieldValues extends FieldValues = FieldValues> = {
-  [key in FieldPathInternal<TFieldValues, ArrayKey>]?: Rules<TFieldValues>;
+  [key in FieldPathInternal<TFieldValues>]?: Rules<TFieldValues>;
 };

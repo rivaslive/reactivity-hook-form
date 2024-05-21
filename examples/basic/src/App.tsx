@@ -2,19 +2,26 @@ import './App.css';
 import '../../../../reactivity-hook-form/src/style.css';
 import Form, { FormItem } from '../../../../reactivity-hook-form/src';
 
+type FormType = {
+  user: {
+    username: string;
+    password: string;
+  };
+};
+
 function App() {
   return (
     <div className="container">
-      <Form>
-        <FormItem
-          name="username"
+      <Form<FormType>>
+        <FormItem<FormType>
+          name="user.username"
           label="Username"
           rules={{ required: 'User name is required' }}
         >
           <input type="text" placeholder="Username" />
         </FormItem>
-        <FormItem
-          name="password"
+        <FormItem<FormType>
+          name="user.password"
           label="Password"
           rules={{ required: 'Password is required' }}
         >

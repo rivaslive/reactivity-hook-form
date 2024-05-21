@@ -1,5 +1,5 @@
 import { FieldValues, UseFormReturn } from 'react-hook-form';
-import { FieldPathInternal, ArrayKey } from './extend-react-hook-form.type';
+import { FieldPathInternal } from './extend-react-hook-form.type';
 
 export type DependencyAction<TFieldValues extends FieldValues = FieldValues> = (
   formValues: Partial<TFieldValues>,
@@ -8,6 +8,6 @@ export type DependencyAction<TFieldValues extends FieldValues = FieldValues> = (
 ) => void;
 
 export type FormDependencies<TFieldValues extends FieldValues = FieldValues> = {
-  dependencies: FieldPathInternal<TFieldValues, ArrayKey>[];
+  dependencies: FieldPathInternal<TFieldValues>[];
   callback: DependencyAction<TFieldValues>;
 }[];
