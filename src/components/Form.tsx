@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { ComponentProps, ReactNode, useEffect, useState } from 'react';
+import {
+  ComponentProps,
+  PropsWithChildren,
+  ReactNode,
+  useEffect,
+  useState
+} from 'react';
 import {
   FieldValues,
   FormProvider,
@@ -13,7 +19,10 @@ import { FormDependencies } from '../types/dependencies.type';
 import { FieldPathLib } from '../types/extend-react-hook-form.type';
 import { FormValidations } from '../types/validations.type';
 import { getNameAndIndexKey } from '../utils';
-import { FormOptions, FormOptionsProvider } from '../context/FormOptions';
+import {
+  FormOptions,
+  ReactivityHookFormProvider
+} from '../context/FormOptions';
 
 type FormProps<TFieldValues extends FieldValues = FieldValues> =
   UseFormProps<TFieldValues> &
@@ -27,6 +36,16 @@ type FormProps<TFieldValues extends FieldValues = FieldValues> =
       onSubmit?: SubmitHandler<TFieldValues>;
       formContext?: UseFormReturn<TFieldValues>;
     };
+
+const Component = ({
+  showErrorText,
+  children
+}: PropsWithChildren<{ showErrorText: boolean }>) => {
+  if (!showErrorText) {
+    return <ReactivityHookFormProvider>{children}</ReactivityHookFormProvider>;
+  }
+  return <>{children}</>;
+};
 
 const Form = <TFieldValues extends FieldValues = FieldValues>(
   props: FormProps<TFieldValues>
@@ -107,25 +126,25 @@ const Form = <TFieldValues extends FieldValues = FieldValues>(
   }, [methods.formState.submitCount]);
 
   return (
-    <FormProvider {...methods}>
-      <FormOptionsProvider showErrorText={showErrorText}>
+    <Component showErrorText={showErrorText}>
+      <FormProvider {...methods}>
         <ValidationsProvider validations={validations}>
           <form
             id={formId}
             onSubmit={methods.handleSubmit(onSubmit ?? (() => {}))}
             {...restFormProps}
             style={{
+              gap,
               display: 'flex',
               flexDirection: 'column',
-              gap,
               ...restFormProps?.style
             }}
           >
             {children}
           </form>
         </ValidationsProvider>
-      </FormOptionsProvider>
-    </FormProvider>
+      </FormProvider>
+    </Component>
   );
 };
 

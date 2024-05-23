@@ -8,7 +8,8 @@ export type IsTuple<T extends ReadonlyArray<any>> = number extends T['length']
   : true;
 
 type TupleKeys<T> = Exclude<keyof T, keyof any[]>;
-type ArrayKey = '[number]';
+
+export type ArrayKey = '[number]';
 
 /**
  * Helper function to break apart T1 and check if any are equal to T2

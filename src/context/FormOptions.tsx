@@ -9,7 +9,7 @@ const FormOptionsContext = createContext<FormOptions>({
   showErrorText: true
 });
 
-export function FormOptionsProvider({
+export function ReactivityHookFormProvider({
   children,
   showErrorText = true
 }: PropsWithChildren<FormOptions>) {
